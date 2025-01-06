@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction - Fake News Detection</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .header-buttons {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .header-buttons a {
+            background-color: #1f1f1f;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .header-buttons a:hover {
+            background-color: #333333;
+            transform: scale(1.1);
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            background: #161616;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+            text-align: center;
+        }
+
+        h2 {
+            color: #00bcd4;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        /* Table Styles */
+        .news-table-wrapper {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 3px solid #2196F3;
+            border-radius: 10px;
+        }
+
+        .news-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 20px;
+        }
+
+        .news-table th, .news-table td {
+            background-color: #262626;
+            color: white;
+            padding: 18px;
+            text-align: center;
+            border: 1px solid #2196F3;
+        }
+
+        .news-table tr:nth-child(even) {
+            background-color: #333333;
+        }
+
+        .news-table tr:hover {
+            background-color: #404040;
+        }
+
+        .predict-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+            border: none;
+        }
+
+        .predict-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive Design for Mobile and Tablets */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header-buttons a {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .news-table th, .news-table td {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .predict-button {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-buttons">
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+    </div>
+
+    <div class="container">
+        <h2>Fake News Detection</h2>
+
+        <div class="news-table-wrapper">
+            <table class="news-table">
+                <thead>
+                    <tr>
+                        <th>News Title</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="news-list">
+                    <!-- News items populated dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const newsTitles = [
+            "Breaking News: World Economy Shows Recovery",
+            "Latest Tech Advances: AI Changing Industries",
+            "Health Breakthroughs: New Advances in Treatment",
+            "Sports Update: Team X Wins Championship",
+            "Climate Change Awareness: Global Action Needed",
+            "Major Developments in Renewable Energy Technologies",
+            "Space Exploration: Upcoming Mars Missions",
+            "Political Unrest: Protests Erupt Globally",
+            "New Discoveries in Medicine: Cure for Rare Disease",
+            "Tech Giants Face Major Antitrust Challenges",
+            "Scientific Breakthroughs Revolutionizing Energy Storage",
+            "Cultural Milestone: Record-breaking Films of the Year",
+            "Upcoming Elections: Implications and Predictions",
+            "Global Trade Agreements and Economic Trends",
+            "Revolutionary Tech Products Expected Next Year"
+        ];
+    
+        function generateRandomNews() {
+            const newsList = document.getElementById('news-list');
+            newsList.innerHTML = '';
+    
+            // Shuffle news array and add random 10 items
+            const shuffledNews = newsTitles.sort(() => 0.5 - Math.random()).slice(0, 10);
+    
+            shuffledNews.forEach(news => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${news}</td>
+                    <td><button class="predict-button" onclick="redirectToResultPage('${news}')">Predict</button></td>
+                `;
+                newsList.appendChild(row);
+            });
+        }
+    
+        function redirectToResultPage(news) {
+            // Pass news title to the result page (optional: using query params)
+            alert(`Redirecting to results for: "${news}"`);
+            window.location.href = `result.html?news=${encodeURIComponent(news)}`;
+        }
+    
+        window.onload = generateRandomNews;
+    </script>
+    
+</body>
+</html>

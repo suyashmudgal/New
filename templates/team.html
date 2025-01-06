@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team - Fake News Detector</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #1a1a1a;
+      color: #fff;
+      line-height: 1.6;
+      height: 100%;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+      overflow-y: auto; /* Enable vertical scrolling */
+      position: relative;
+    }
+
+    h1, h2, h3 {
+      text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.8);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 30px;
+    }
+
+    .nav-link {
+      font-size: 18px;
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 25px;
+      border-radius: 30px;
+      position: relative;
+      overflow: hidden;
+      transition: 0.3s ease;
+    }
+
+    .nav-link:hover::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 300%;
+      height: 100%;
+      background: rgba(51, 204, 255, 0.8);
+      transform: translateX(-50%);
+      animation: expand 0.5s ease;
+    }
+
+    @keyframes expand {
+      100% {
+        left: 0;
+        width: 100%;
+      }
+    }
+
+    .nav-link:hover {
+      color: #33ccff;
+    }
+
+    /* Team Section */
+    .team-section {
+      position: relative;
+      top: 60px;
+      padding: 100px 20px 80px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.8);
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .team-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .team-member {
+      width: 220px;
+      height: 350px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      margin: 30px;
+    }
+
+    .team-member:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px rgba(51, 204, 255, 0.5);
+    }
+
+    .team-member img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.4s ease;
+    }
+
+    .team-member:hover img {
+      transform: scale(1.1);
+    }
+
+    .team-member .info {
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.8);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .team-member:hover .info {
+      transform: translateY(-20px);
+    }
+
+    .team-member h3 {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .team-member p {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .team-member a {
+      font-size: 16px;
+      color: #33ccff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .team-member a:hover {
+      color: #ff99cc;
+    }
+
+    /* Team Leader Animation */
+    .team-leader {
+      animation: leaderAnimation 3s ease-in-out forwards;
+    }
+
+    @keyframes leaderAnimation {
+      0% {
+        transform: translateX(-50%) rotate(-30deg);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+      }
+      50% {
+        transform: translateX(0) rotate(360deg);
+        box-shadow: 0 0 30px rgba(255, 0, 0, 1);
+      }
+      100% {
+        transform: translateX(0) rotate(0deg);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+      }
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+      transition: backdrop-filter 0.3s ease;
+    }
+
+    .modal-content {
+      background: #fff;
+      color: #000;
+      padding: 20px;
+      border-radius: 20px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+      transform: scale(0);
+      animation: modalIn 0.5s ease forwards;
+    }
+
+    @keyframes modalIn {
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .modal img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+
+    .close-btn {
+      background-color: #ff3333;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .close-btn:hover {
+      background-color: #ff1a1a;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header class="header">
+    <nav class="nav">
+      <a href="/" class="nav-link">Home</a>
+     
+    </nav>
+  </header>
+
+  <!-- Team Section -->
+  <section class="team-section">
+    <h2>Meet the Team</h2>
+    <div class="team-container">
+      <!-- Team Leader (Animation starts from the left corner) -->
+      <div class="team-member team-leader" onclick="openModal('Suyash Mudgal', 'lead developer', '/static/style/suy.jpg', 'suyash is the lead developer who is responsible for the overall architecture and design of the project, also manages the team and  did the frontend part of the project as well as did  the model training part of the project  . And help in the backend code also .')">
+        <img src="{{ url_for('static', filename='style/suy.jpg') }}"alt="Suyash Mudgal">
+      
+        <div class="info">
+          <h3>Suyash Mudgal</h3>
+          <p>Team Leader</p>  
+        </div>
+      </div>
+
+      <!-- Team Member 1 -->
+      <div class="team-member" onclick="openModal('Aditya Jaiswal', 'Data collector', '/static/style/jaiswal.jpg', 'Aditya is the data collector responsible for collecting the data from various sources and processing it to use it for training the model. Also he is the dataset manager who is responsible for managing the dataset .')">
+        <img src="{{ url_for('static', filename='style/jaiswal.jpg') }}" alt="Aditya Jaiswal">
+        <div class="info">
+          <h3>Aditya Jaiswal</h3>
+          <p>Dataset Manager</p>
+        </div>
+      </div>
+
+      <!-- Team Member 2 -->
+      <div class="team-member" onclick="openModal('Muskan Gupta', 'Backend Developer', '/static/style/muskan.jpg', 'Muskan is the backend developer who is responsible for the backend code of the project, help in the API part of the project which provide daily latest news .')">
+        <img src="{{ url_for('static', filename='style/muskan.jpg') }}" alt="Muskan Gupta">
+        <div class="info">
+          <h3>Muskan Gupta</h3>
+          <p>Backend Developer</p>
+        </div>
+      </div>
+
+      <!-- Team Member 3 -->
+      <div class="team-member" onclick="openModal('Yash Soni', 'python developer', '/static/style/yash.jpg', 'yash is help in data visualization part of the project which shows the graph of the news which we will predict . .')">
+        <img src="{{ url_for('static', filename='style/yash.jpg') }}" alt="Yash Soni">
+        <div class="info">
+          <h3>Yash Soni</h3>
+          <p>DSA IN PYTHON </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div class="modal" id="memberModal">
+    <div class="modal-content">
+      <img id="memberImage" src="" alt="">
+      <h3 id="memberName"></h3>
+      <p id="memberRole"></p>
+      <p id="memberDescription"></p>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Modal Functions
+    function openModal(name, role, image, description) {
+      document.getElementById('memberName').textContent = name;
+      document.getElementById('memberRole').textContent = role;
+      document.getElementById('memberImage').src = image;
+      document.getElementById('memberDescription').textContent = description;
+      document.getElementById('memberModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('memberModal').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>

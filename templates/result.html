@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detection</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0D1B2A; /* Dark Nebula */
+            color: #F5F5F5; /* Starlight White */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            overflow: auto; /* Allow scrolling */
+        }
+
+        header {
+            background: #1F2430; /* Space Black */
+            padding: 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        header h1 {
+            font-size: 26px;
+            color: #D64F7B; /* Nebula Pink */
+            margin: 0;
+        }
+
+        header button {
+            padding: 12px 24px;
+            background: transparent;
+            border: 2px solid #D64F7B; /* Nebula Pink border */
+            color: #D64F7B;
+            font-size: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        header button:hover {
+            background-color: #D64F7B; /* Nebula Pink */
+            color: #FFFFFF;
+        }
+
+        .content {
+            margin-top: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 80%;
+            max-width: 1000px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+            position: relative;
+            margin-bottom: 100px; /* Extra space for smooth scrolling */
+        }
+
+        .chart-container {
+            width: 80%;
+            height: 400px;
+            margin: 20px 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .result-container {
+            width: 48%;
+            height: 400px;
+            margin: 20px 10px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+            color: #F5F5F5; /* Starlight White */
+            font-size: 18px;
+        }
+
+        .result-container h2 {
+            color: #1DE9B6; /* Glowing Cyan */
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .result-container .prediction-result {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 15px;
+            color: #FF3D00; /* Cosmic Red */
+            background-color: #283c29;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .result-container .prediction-result.real {
+            color: #1DE9B6; /* Glowing Cyan */
+            background-color: #203c33;
+        }
+
+        .buttons {
+            position: absolute; /* Adjust to position inside chart-container */
+            right: 20px;
+            bottom: 10px;
+            text-align: center;
+        }
+
+        .buttons button {
+            padding: 15px;
+            background-color: #FFD740; /* Cosmic Yellow */
+            color: #F5F5F5; /* Starlight White */
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 10px;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .buttons button:hover {
+            background-color: #FFB300; /* Brighter Yellow */
+            transform: scale(1.2);
+            box-shadow: 0 0 15px 5px rgba(255, 179, 0, 0.7);
+        }
+
+        .return-button {
+            padding: 15px;
+            background-color: transparent;
+            color: #FFFFFF;
+            border: 2px solid #D32F2F; /* Deep Crimson */
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .return-button:hover {
+            background-color: #D32F2F; /* Deep Crimson */
+            transform: scale(1.1);
+        }
+
+        .home-button {
+            padding: 15px;
+            background-color: transparent;
+            color: #FFFFFF;
+            border: 2px solid #1F2430; /* Dark border color */
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            position: relative;
+            left: -30px; /* Slightly shift to the left */
+        }
+
+        .home-button:hover {
+            background-color: #1F2430;
+            color: #D64F7B;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Fake News Detection</h1>
+        <button class="home-button" onclick="goToHomePage()">Home</button>
+    </header>
+    
+    <div class="content">
+        <div class="chart-container">
+            <canvas id="resultChart"></canvas>
+            <div class="buttons">
+                <button onclick="predictAnother()">another⟳</button>
+            </div>
+        </div>
+    
+        <div class="result-container">
+            <h2 id="news-result-type">Prediction Result</h2>
+            <p id="news-text">{{news}}</p>
+            <div class="prediction-result" id="prediction-result">
+                Prediction: <span id="prediction-label">Real</span>
+            </div>
+            <p>Confidence: <span id="confidence-value">0%</span></p>
+        </div>
+    </div>
+    
+    <button class="return-button" onclick="returnTodashboard()">dashboard ←</button>
+    
+    <script>
+        function updatePredictionData(newsText, isFake, confidence) {
+            // document.getElementById('news-text').innerText = newsText || "The new is predicted with the help of the model train and using machine learning algorithms.";
+            document.getElementById('confidence-value').innerText = confidence || "87%";
+
+            const resultElement = document.getElementById('prediction-result');
+            const resultTypeElement = document.getElementById('news-result-type');
+            if (isFake) {
+                resultElement.innerText = "accuracy "; 
+                resultTypeElement.innerText = "Fake News";
+                resultElement.classList.add('fake');
+                resultElement.classList.remove('real');
+            } else {
+                resultElement.innerText = "Real";
+                resultTypeElement.innerText = "Real";
+                resultElement.classList.add('real');
+                resultElement.classList.remove('fake');
+            }
+
+            updateChart(isFake, confidence);
+        }
+
+        function updateChart(isFake, confidence) {
+            const fakePercentage = isFake ? parseFloat(confidence) : 100 - parseFloat(confidence);
+            const realPercentage = 100 - fakePercentage;
+
+            const chartData = {
+                labels: ['Fake', 'Real'],
+                datasets: [{
+                    data: [fakePercentage, realPercentage],
+                    backgroundColor: ['#D32F2F', '#00C853'], /* Deep Crimson, Galactic Green */
+                    borderColor: ['#D32F2F', '#00C853'], /* Deep Crimson, Galactic Green */
+                    borderWidth: 1
+                }]
+            };
+
+            resultChart.data = chartData;
+            resultChart.update();
+        }
+
+        const ctx = document.getElementById('resultChart').getContext('2d');
+        const resultChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Fake', 'Real'],
+                datasets: [{
+                    data: [87, 13],
+                    backgroundColor: ['#D32F2F', '#00C853'], /* Deep Crimson, Galactic Green */
+                    borderColor: ['#D32F2F', '#00C853'], /* Deep Crimson, Galactic Green */
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+
+        function predictAnother() {
+            alert('Predicting another...');
+            const randomFake = Math.random() < 0.5;
+            const randomConfidence = (Math.random() * 100).toFixed(2);
+            updatePredictionData('New random space news prediction...', randomFake, randomConfidence);
+        }
+
+       
+    function returnTodashboard() {
+        window.location.href = "dashboard.html";  // Redirect to the dashboard route
+    }
+
+    function goToHomePage() {
+        window.location.href = "index.html";  // Redirect to the home route
+    }
+         updatePredictionData("this news is true according to our process  ", true, "88%");
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logout Page</title>
+  <link rel="stylesheet" href="../static/style/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <nav>
+      <ul class="nav">
+        <li><a href="#" class="nav-link">Home</a></li>
+        <li><a href="#" class="nav-link">Profile</a></li>
+       
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Logout Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <h1 class="hero-title">You have successfully logged out.</h1>
+      <p class="hero-description">
+        Thank you for using our service. We hope to see you again soon!
+      </p>
+      <button class="hero-button" onclick="goToLogin()">Log Back In</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    &copy; 2025 Your Company. All rights reserved.
+  </footer>
+
+  <script>
+    function goToLogin() {
+      window.location.href = 'login.html'; // Replace with the actual login page URL
+    }
+  </script>
+</body>
+</html>

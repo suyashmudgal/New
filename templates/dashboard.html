@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Fake News Detection</title>
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(120deg, #141e30, #243b55);
+            color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+            color: #64dfdf;
+            margin: 0;
+        }
+
+        .user-name {
+            color: #64dfdf;
+            font-size: 18px;
+        }
+
+        main {
+            margin-top: 50px;
+        }
+
+        .dashboard-container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 10px;
+            width: 80%;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn-container button {
+            background: #64dfdf;
+            color: black;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 250px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-container button:hover {
+            transform: scale(1.1);
+            background: #52c4c4;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #444;
+        }
+
+        th {
+            background-color: #64dfdf;
+        }
+
+        tr:nth-child(even) {
+            background-color: #333;
+        }
+
+        tr:hover {
+            background-color: #52c4c4;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .no-results {
+            color: #52c4c4;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Dashboard - Fake News Detection</h1>
+        <div class="user-name" id="user-name">Hello, {{email}}!</div>
+    </header>
+    
+    <main>
+        <div class="dashboard-container">
+            <h2>Welcome to Your Dashboard</h2>
+            <p>Here you can see your previous prediction results and perform new ones.</p>
+
+            <!-- Button to go to Prediction page -->
+            <div class="btn-container">
+                <button onclick="location.href='prediction2.html'">Go to Prediction</button>
+            </div>
+
+            <!-- Table displaying the search history and results (Only if there are results) -->
+            <div class="table-container" id="search-history-container">
+                <table id="search-history-table">
+                    <thead>
+                        <tr>
+                            <th>Search Content</th>
+                            <th>News Found</th>
+                            <th>Date of Search</th>
+                        </tr>
+                    </thead>
+                    <tbody id="search-history">
+                        <!-- Dynamically populated rows will appear here -->
+                    </tbody>
+                </table>
+                <p id="no-results-message" class="no-results" style="display: none;">No predictions found. Start predicting now!</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Fake News Detection. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Simulate fetching user data (in real-world, you'd fetch this from a server)
+        const userSearchHistory = [];  // Change this to an empty array to simulate no results or populate with data
+        // const userName = ; // Simulate logged-in user name (from backend or session)
+
+        // Function to populate the table with search history data
+        function populateSearchHistory() {
+            const tableBody = document.getElementById('search-history');
+            const noResultsMessage = document.getElementById('no-results-message');
+            const table = document.getElementById('search-history-table');
+            const userNameDiv = document.getElementById('user-name');
+
+            // Display the user's name in the header
+            // userNameDiv.innerText = `Hello, ${userName}!`;
+
+            // If there are no predictions, show the 'no results' message
+            if (userSearchHistory.length === 0) {
+                noResultsMessage.style.display = 'block';
+                table.style.display = 'none';  // Hide the table
+            } else {
+                noResultsMessage.style.display = 'none';
+                table.style.display = 'table';  // Show the table
+
+                // Populate the table with each search history item
+                userSearchHistory.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.content}</td>
+                        <td>${item.newsFound}</td>
+                        <td>${item.date}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+        }
+
+        // Function to simulate adding a new prediction
+        function addNewPrediction(content, newsFound) {
+            const date = new Date().toLocaleString();
+            userSearchHistory.push({ content, newsFound, date });
+
+            // Automatically update the dashboard with the new prediction
+            populateSearchHistory();
+        }
+
+        // Call the function to populate the table when the page loads
+        populateSearchHistory();
+        
+        // Example of adding a new prediction (you can remove this after integration)
+        setTimeout(() => {
+            addNewPrediction('Example Content 1', 'Example News 1');
+        }, 3000); // Simulate a new prediction after 3 seconds
+    </script>
+</body>
+</html>

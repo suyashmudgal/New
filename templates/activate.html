@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Activation</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+        }
+        .message-container {
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            background-color: #e8f5e9;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            /* height: 400px; */
+            /* overflow-y: scroll; */
+        }
+        h1 {
+            color: #4CAF50;
+            font-size: 24px;
+        }
+    </style>
+    
+</head>
+<body>
+
+    <div class="message-container">
+        <h1>
+            {% if message %}
+                {{ message }}
+            {% endif %}
+        </h1>
+        <button class="backBtn+" style="border: 2px solid #000000;"><a href="/" style="background-color: white;color: black;text-decoration: none;">Back</a></button>
+    </div>
+</body>
+</html>

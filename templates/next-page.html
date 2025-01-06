@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latest News</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #121212;
+      color: #fff;
+    }
+
+    header {
+      background-color: #333;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 35px;
+      color: #33ccff;
+    }
+
+    .news-container {
+      max-width: 1200px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+
+    .news-item {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .news-item:hover {
+      background-color: rgba(51, 204, 255, 0.2);
+    }
+
+    .news-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .news-date {
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .news-description {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Latest News</h1>
+  </header>
+
+  <div class="news-container" id="news-container">
+    <!-- Articles will be dynamically injected here -->
+  </div>
+
+  <script>
+    // Simulated daily news data (This would ideally be fetched from an API based on today's date)
+    const newsData = [
+      {
+        title: "AI Detecting Fake News: The Next Big Step",
+        date: "January 1, 2025", // Today's date
+        description: "Today marks a major breakthrough in AI technology. Fake news detection is now faster and more accurate than ever before."
+      },
+      {
+        title: "Breaking: AI Revolutionizes Information Accuracy",
+        date: "January 1, 2025", // Today's date
+        description: "New AI models are being developed that will help in filtering misinformation with high accuracy, particularly in the realm of news articles."
+      },
+      {
+        title: "Fighting Misinformation: The Role of AI in 2025",
+        date: "January 1, 2025", // Today's date
+        description: "With misinformation becoming a serious issue, AI tools have become pivotal in ensuring that information is verified before it spreads."
+      },
+    ];
+
+    // Function to load today's news dynamically
+    function loadDailyNews() {
+      const today = new Date().toLocaleDateString(); // Get today's date
+      const newsContainer = document.getElementById('news-container');
+      newsContainer.innerHTML = ''; // Clear any previous content
+
+      // Filter news that corresponds to today's date
+      const todaysNews = newsData.filter(news => news.date === today);
+
+      if (todaysNews.length === 0) {
+        newsContainer.innerHTML = '<p>No news available for today. Please check back tomorrow!</p>';
+      } else {
+        // Loop through today's news and add them to the container
+        todaysNews.forEach(news => {
+          const newsItem = document.createElement('div');
+          newsItem.classList.add('news-item');
+          newsItem.innerHTML = `
+            <h2 class="news-title">${news.title}</h2>
+            <p class="news-date">${news.date}</p>
+            <p class="news-description">${news.description}</p>
+          `;
+          newsContainer.appendChild(newsItem);
+        });
+      }
+    }
+
+    // Load the daily news when the page is ready
+    window.onload = function() {
+      loadDailyNews(); // Load news on page load
+    }
+  </script>
+</body>
+</html>
