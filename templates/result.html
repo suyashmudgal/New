@@ -69,7 +69,6 @@
             padding: 20px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
             position: relative;
-            margin-bottom: 100px; /* Extra space for smooth scrolling */
         }
 
         .chart-container {
@@ -80,10 +79,6 @@
             border-radius: 10px;
             padding: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
         }
 
         .result-container {
@@ -187,76 +182,53 @@
 <body>
     <header>
         <h1>Fake News Detection</h1>
-        <button class="home-button" onclick="goToHomePage()">Home</button>
+        <button onclick="goToHomePage()">Home</button>
     </header>
     
     <div class="content">
         <div class="chart-container">
             <canvas id="resultChart"></canvas>
             <div class="buttons">
-                <button onclick="predictAnother()">another⟳</button>
+                <button class="return-button" onclick="returnTodashboard()">dashboard ←</button>
             </div>
         </div>
     
         <div class="result-container">
             <h2 id="news-result-type">Prediction Result</h2>
-            <p id="news-text">{{news}}</p>
+            <p id="news-text">{{ news }}</p>
             <div class="prediction-result" id="prediction-result">
-                Prediction: <span id="prediction-label">Real</span>
+                Prediction: <span id="prediction-label">{{ status }}</span>
             </div>
-            <p>Confidence: <span id="confidence-value">0%</span></p>
+            <p>Confidence: <span id="confidence-value">{{ confidence }}%</span></p>
         </div>
     </div>
     
-    <button class="return-button" onclick="returnTodashboard()">dashboard ←</button>
-    
     <script>
-        function updatePredictionData(newsText, isFake, confidence) {
-            // document.getElementById('news-text').innerText = newsText || "The new is predicted with the help of the model train and using machine learning algorithms.";
-            document.getElementById('confidence-value').innerText = confidence || "87%";
-
-            const resultElement = document.getElementById('prediction-result');
-            const resultTypeElement = document.getElementById('news-result-type');
-            if (isFake) {
-                resultElement.innerText = "accuracy "; 
-                resultTypeElement.innerText = "Fake News";
-                resultElement.classList.add('fake');
-                resultElement.classList.remove('real');
-            } else {
-                resultElement.innerText = "Real";
-                resultTypeElement.innerText = "Real";
-                resultElement.classList.add('real');
-                resultElement.classList.remove('fake');
-            }
-
-            updateChart(isFake, confidence);
+        // Redirect to the home page
+        function goToHomePage() {
+            window.location.href = "/";
+        }
+        function returnTodashboard() {
+            window.location.href = "dashboard";  // Redirect to the dashboard route
         }
 
-        function updateChart(isFake, confidence) {
-            const fakePercentage = isFake ? parseFloat(confidence) : 100 - parseFloat(confidence);
-            const realPercentage = 100 - fakePercentage;
+        // Retrieve the values from the template context
+        var status = "{{ status }}";  // Flask value: 'Fake' or 'Real'
+        var confidence = "{{ confidence }}"; // Confidence value passed from Flask
 
-            const chartData = {
-                labels: ['Fake', 'Real'],
-                datasets: [{
-                    data: [fakePercentage, realPercentage],
-                    backgroundColor: ['#D32F2F', '#00C853'], /* Deep Crimson, Galactic Green */
-                    borderColor: ['#D32F2F', '#00C853'], /* Deep Crimson, Galactic Green */
-                    borderWidth: 1
-                }]
-            };
+        // Determine if the news is fake or real
+        const isFake = (status === 'Fake');
+        const fakePercentage = isFake ? parseFloat(confidence) : 100 - parseFloat(confidence);
+        const realPercentage = 100 - fakePercentage;
 
-            resultChart.data = chartData;
-            resultChart.update();
-        }
-
+        // Create the pie chart
         const ctx = document.getElementById('resultChart').getContext('2d');
         const resultChart = new Chart(ctx, {
             type: 'pie',
             data: {
                 labels: ['Fake', 'Real'],
                 datasets: [{
-                    data: [87, 13],
+                    data: [fakePercentage, realPercentage],
                     backgroundColor: ['#D32F2F', '#00C853'], /* Deep Crimson, Galactic Green */
                     borderColor: ['#D32F2F', '#00C853'], /* Deep Crimson, Galactic Green */
                     borderWidth: 1
@@ -271,23 +243,6 @@
                 }
             }
         });
-
-        function predictAnother() {
-            alert('Predicting another...');
-            const randomFake = Math.random() < 0.5;
-            const randomConfidence = (Math.random() * 100).toFixed(2);
-            updatePredictionData('New random space news prediction...', randomFake, randomConfidence);
-        }
-
-       
-    function returnTodashboard() {
-        window.location.href = "dashboard.html";  // Redirect to the dashboard route
-    }
-
-    function goToHomePage() {
-        window.location.href = "index.html";  // Redirect to the home route
-    }
-         updatePredictionData("this news is true according to our process  ", true, "88%");
     </script>
 </body>
 </html>

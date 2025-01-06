@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from loginscript import login
 from registration import emailCheck, register
 from activate import checkToken, activateAccount
+from predict import predictNews
 
 # Set up Flask server
 app = Flask(__name__)
@@ -10,24 +11,42 @@ app.secret_key = b'\xd8\x95\x814Ij\x014S\xc6r\xbaC\x1e>N\xa0\x16d:\x8dp_\xf1'
 # Serve the index page
 @app.route('/')
 def index():
+    if 'login' in session:
+        return redirect(url_for('dashboard'))
+    else:
+        return render_template("index.html")
     
-    return render_template("index.html")
-
-# Serve the about page
-
-
 # Serve the login page
 @app.route('/login')
 def login_page():
+    if 'login' in session:
+        return redirect(url_for('dashboard'))
+    else:
+        return render_template("login.html")
     
-    return render_template("login.html")
-
 @app.route('/dashboard')
 def dashboard():
     if 'login' in session:
         return render_template("dashboard.html", email=session['email'])
     else:
         return redirect(url_for('login'))
+    
+# Result Route
+@app.route('/result', methods=['GET'])
+def result():
+    if 'login' in session:
+        news = request.args.get('news')
+        result = predictNews(news)
+        status = result[0]
+        confidence = result[1]
+        print(news, result, status, confidence)
+        return render_template("result.html", news=news, status=status, confidence=confidence)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/team')
+def team():
+    return render_template("team.html")
 
 # Handle login form submission and verification
 @app.route('/verify-login', methods=["POST"])
@@ -87,7 +106,7 @@ def activate():
         return render_template("activate.html", message=text)
     
 
-@app.route('/prediction2.html', methods=['GET', 'POST'])
+@app.route('/prediction2', methods=['GET', 'POST'])
 def prediction():
     if request.method == 'POST':
         news = request.form['news']  # Get news text from form
@@ -97,19 +116,11 @@ def prediction():
         return render_template('result.html', prediction=prediction_result, accuracy=accuracy)
     return render_template('prediction2.html')
 
-# Result Route
-@app.route('/result.html', methods=['GET'])
-def result():
-    news = request.args.get('news')
-    return render_template('result.html', news=news)
 
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('login_page'))
-@app.route('/team.html')
-def team():
-    return render_template("team.html")
 
 # Run the app
 if __name__ == '__main__':
