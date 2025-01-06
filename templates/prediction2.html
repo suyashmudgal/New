@@ -136,8 +136,8 @@
 </head>
 <body>
     <div class="header-buttons">
-        <a href="index.html">Home</a>
-        <a href="dashboard.html">Dashboard</a>
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
     </div>
 
     <div class="container">
@@ -197,7 +197,7 @@
         function redirectToResultPage(news) {
             // Pass news title to the result page (optional: using query params)
             alert(`Redirecting to results for: "${news}"`);
-            window.location.href = `result.html?news=${encodeURIComponent(news)}`;
+            window.location.href = `result?news=${encodeURIComponent(news)}`;
         }
     
         window.onload = generateRandomNews;
