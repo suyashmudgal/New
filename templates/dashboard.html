@@ -133,7 +133,7 @@
 
             <!-- Button to go to Prediction page -->
             <div class="btn-container">
-                <button onclick="location.href='prediction2.html'">Go to Prediction</button>
+                <button onclick="location.href='prediction2'">Go to Prediction</button>
             </div>
 
             <!-- Table displaying the search history and results (Only if there are results) -->
@@ -160,57 +160,41 @@
     </footer>
 
     <script>
-        // Simulate fetching user data (in real-world, you'd fetch this from a server)
-        const userSearchHistory = [];  // Change this to an empty array to simulate no results or populate with data
-        // const userName = ; // Simulate logged-in user name (from backend or session)
-
-        // Function to populate the table with search history data
-        function populateSearchHistory() {
+        async function loadPredictionHistory() {
+            // Fetch prediction data from the server
+            const response = await fetch('/get-predictions');
+            const predictions = await response.json();
+            
             const tableBody = document.getElementById('search-history');
             const noResultsMessage = document.getElementById('no-results-message');
             const table = document.getElementById('search-history-table');
-            const userNameDiv = document.getElementById('user-name');
 
-            // Display the user's name in the header
-            // userNameDiv.innerText = `Hello, ${userName}!`;
+            // Clear any existing rows
+            tableBody.innerHTML = '';
 
-            // If there are no predictions, show the 'no results' message
-            if (userSearchHistory.length === 0) {
+            // If no results are found, display message
+            if (predictions.length === 0) {
                 noResultsMessage.style.display = 'block';
-                table.style.display = 'none';  // Hide the table
+                table.style.display = 'none'; // Hide the table
             } else {
                 noResultsMessage.style.display = 'none';
-                table.style.display = 'table';  // Show the table
+                table.style.display = 'table'; // Show the table
 
-                // Populate the table with each search history item
-                userSearchHistory.forEach(item => {
+                // Populate the table with each prediction
+                predictions.forEach(pred => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${item.content}</td>
-                        <td>${item.newsFound}</td>
-                        <td>${item.date}</td>
+                        <td>${pred.searchContent}</td>
+                        <td>${pred.newsFound} (${pred.accuracy}%)</td>
+                        <td>${pred.date}</td>
                     `;
                     tableBody.appendChild(row);
                 });
             }
         }
-
-        // Function to simulate adding a new prediction
-        function addNewPrediction(content, newsFound) {
-            const date = new Date().toLocaleString();
-            userSearchHistory.push({ content, newsFound, date });
-
-            // Automatically update the dashboard with the new prediction
-            populateSearchHistory();
-        }
-
-        // Call the function to populate the table when the page loads
-        populateSearchHistory();
         
-        // Example of adding a new prediction (you can remove this after integration)
-        setTimeout(() => {
-            addNewPrediction('Example Content 1', 'Example News 1');
-        }, 3000); // Simulate a new prediction after 3 seconds
+        // Call the function to load prediction history when the page loads
+        window.onload = loadPredictionHistory;
     </script>
 </body>
 </html>

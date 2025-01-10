@@ -10,7 +10,6 @@ def login(username, password):
 
     numberOfUsers = len(res)
 
-
     if (numberOfUsers != 1):
         return "Incorrect username or password", False
     else:
